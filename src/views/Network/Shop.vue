@@ -226,9 +226,14 @@ export default {
   },
   methods: {
     checkout: function() {
+      var basicItems = this.network.getStore().itemIdList(this.basket);
+
       this.$router.push({
         name: "checkout",
-        params: { uuid: this.uuid, items: this.basket }
+        params: {
+          network: this.network.uuid,
+          basket: btoa(JSON.stringify(basicItems))
+        }
       });
     },
     previewItem: function(item) {

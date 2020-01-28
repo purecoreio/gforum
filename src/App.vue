@@ -9,8 +9,8 @@
       <v-row align="center">
         <v-col cols="2" xs="2" sm="3" md="3">
           <div class="d-inline-flex" @click="goHome()">
-            <v-btn text>
-              <span v-if="$vuetify.breakpoint.mdAndUp" class="mr-2">gforum</span>
+            <v-btn :icon="$vuetify.breakpoint.xsOnly" :text="!$vuetify.breakpoint.xsOnly">
+              <span v-if="$vuetify.breakpoint.smAndUp" class="mr-2">gforum</span>
               <v-icon v-if="!drawer || !$vuetify.breakpoint.mdAndDown">videogame_asset</v-icon>
               <v-icon v-if="drawer && $vuetify.breakpoint.mdAndDown">menu</v-icon>
             </v-btn>
@@ -61,15 +61,12 @@
           <v-menu allow-overflow transition="slide-y-transition" bottom v-model="loginForm">
             <template v-slot:activator="{ on }">
               <div class="d-inline-flex" v-on="on">
-                <v-btn v-if="$vuetify.breakpoint.smAndUp" text>
-                  <span v-if="session==null" class="mr-2">Login</span>
-                  <span v-if="session!=null" class="mr-2">{{ getSessionUsername() }}</span>
-                  <v-icon v-if="session==null">account_circle</v-icon>
-                  <v-avatar v-if="session!=null" size="24px">
-                    <img :src="getSessionPfp()" />
-                  </v-avatar>
-                </v-btn>
-                <v-btn v-if="$vuetify.breakpoint.xsOnly" icon>
+                <v-btn :icon="$vuetify.breakpoint.xsOnly" :text="!$vuetify.breakpoint.xsOnly">
+                  <span v-if="session==null && !$vuetify.breakpoint.xsOnly" class="mr-2">Login</span>
+                  <span
+                    v-if="session!=null && !$vuetify.breakpoint.xsOnly"
+                    class="mr-2"
+                  >{{ getSessionUsername() }}</span>
                   <v-icon v-if="session==null">account_circle</v-icon>
                   <v-avatar v-if="session!=null" size="24px">
                     <img :src="getSessionPfp()" />

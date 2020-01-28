@@ -23,7 +23,7 @@ const routes = [
     component: () => import('../views/Network.vue')
   },
   {
-    path: '/checkout/:uuid/:items',
+    path: '/checkout/:uuid/:basket',
     name: 'checkout',
     props: true,
     component: () => import('../views/Checkout.vue')
