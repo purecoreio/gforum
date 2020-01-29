@@ -10,7 +10,7 @@
   "dependencies": {
     "canvas-confetti": "^1.0.3",
     "core-js": "^3.4.4",
-    "purecore": "^1.7.3",
+    "purecore": "^1.7.4",
     "qrcode": "^1.4.4",
     "vue": "^2.6.10",
     "vue-qrcode": "^0.2.3",
