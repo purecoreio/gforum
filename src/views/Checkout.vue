@@ -47,34 +47,36 @@
                           <v-btn depressed block color="primary" class="black--text">Retry</v-btn>
                         </v-card>
                       </v-expand-transition>
-                      <v-expand-transition>
-                        <v-card v-show="session!=null" outlined dark class="pa-2">
-                          <v-row align="center">
-                            <v-col v-if="$vuetify.breakpoint.smAndUp" cols="12" sm="3">
-                              <center>
-                                <v-avatar size="54">
-                                  <img
-                                    :src="'https://minotar.net/helm/'+session.player.username+'/100.png'"
-                                  />
-                                </v-avatar>
-                              </center>
-                            </v-col>
-                            <v-col cols="12" sm="9">
-                              <v-row no-gutters align="center">
-                                <v-col cols="12" sm="12">
-                                  <p
-                                    style="margin: 0px; font-size: 20px; display: inline-block"
-                                  >{{session.player.username}}</p>
-                                  <v-btn icon>
-                                    <v-icon>exit_to_app</v-icon>
-                                  </v-btn>
-                                  <p style="margin: 0px; font-size: 14px;">{{session.player.uuid}}</p>
-                                </v-col>
-                              </v-row>
-                            </v-col>
-                          </v-row>
-                        </v-card>
-                      </v-expand-transition>
+                      <div v-if="session!=null">
+                        <v-expand-transition>
+                          <v-card v-show="session!=null" outlined dark class="pa-2">
+                            <v-row align="center">
+                              <v-col v-if="$vuetify.breakpoint.smAndUp" cols="12" sm="3">
+                                <center>
+                                  <v-avatar size="54">
+                                    <img
+                                      :src="'https://minotar.net/helm/'+session.player.username+'/100.png'"
+                                    />
+                                  </v-avatar>
+                                </center>
+                              </v-col>
+                              <v-col cols="12" sm="9">
+                                <v-row no-gutters align="center">
+                                  <v-col cols="12" sm="12">
+                                    <p
+                                      style="margin: 0px; font-size: 20px; display: inline-block"
+                                    >{{session.player.username}}</p>
+                                    <v-btn icon>
+                                      <v-icon>exit_to_app</v-icon>
+                                    </v-btn>
+                                    <p style="margin: 0px; font-size: 14px;">{{session.player.uuid}}</p>
+                                  </v-col>
+                                </v-row>
+                              </v-col>
+                            </v-row>
+                          </v-card>
+                        </v-expand-transition>
+                      </div>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                   <v-expansion-panel>
@@ -411,7 +413,6 @@ export default {
             y: 0
           }
         });
-
       }
     }
   },
