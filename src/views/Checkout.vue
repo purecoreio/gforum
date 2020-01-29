@@ -1,5 +1,13 @@
 <template>
   <div>
+    <v-overlay :value="paying">
+      <center>
+        <h2>Authenticating Payment</h2>
+        <v-btn icon @click="paying = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </center>
+    </v-overlay>
     <v-container fluid>
       <v-row fill-height align="start" justify="center">
         <v-col
@@ -87,144 +95,208 @@
               </v-stepper-content>
             </v-stepper-items>
 
-            <v-stepper-content step="2">
-              <v-scroll-y-transition>
-                <div v-show="error!=''">
-                  <v-alert color="primary" text>{{error}}</v-alert>
-                </div>
-              </v-scroll-y-transition>
-              <div v-if="paymentRequest!=null">
-                <v-card class="pa-4 mb-4">
-                  <v-row justify="center">
-                    <v-col cols="12" sm="12" align="center">
-                      <p style="margin: 0px; font-size: 20px; display: inline-block">
-                        {{paymentRequest.username}}
-                        <v-chip
-                          small
-                          class="ma-2"
-                          :color="paymentRequest.player==null ? 'warning' : 'primary'"
-                          outlined
-                        >
-                          <span
-                            v-if="paymentRequest.player==null && !$vuetify.breakpoint.xsOnly"
-                          >Account not found</span>
-                          <span
-                            v-if="paymentRequest.player!=null && !$vuetify.breakpoint.xsOnly "
-                          >Account found</span>
-                          <v-icon
+            <v-stepper-content step="2" style="padding:0px">
+              <div class="pa-5">
+                <v-scroll-y-transition>
+                  <div v-show="error!=''">
+                    <v-alert color="warning" text>{{error}}</v-alert>
+                  </div>
+                </v-scroll-y-transition>
+                <div v-if="paymentRequest!=null">
+                  <v-card class="pa-4 mb-4">
+                    <v-row justify="center">
+                      <v-col cols="12" sm="12" align="center">
+                        <p style="margin: 0px; font-size: 20px; display: inline-block">
+                          {{paymentRequest.username}}
+                          <v-chip
                             small
-                            :class="!$vuetify.breakpoint.xsOnly ? 'ml-2' : ''"
-                            v-text="paymentRequest.player==null ? 'warning' : 'done'"
-                          ></v-icon>
-                        </v-chip>
-                      </p>
-                    </v-col>
-                  </v-row>
-                </v-card>
-                <v-alert
-                  text
-                  class="mb-4"
-                  color="primary"
-                  v-for="(warning,i) in paymentRequest.warnings"
-                  :key="i"
-                >{{warning.text}}</v-alert>
-                <v-expand-transition>
-                  <div v-show="paymentRequest.products.length>0">
-                    <v-list>
-                      <v-list-item
-                        class="mb-2"
-                        v-for="item in paymentRequest.products"
-                        :key="item.uuid"
-                      >
-                        <v-list-item-content
-                          style="margin-top: 0px; adding-top: 0px; padding-bottom: 0px"
-                        >
-                          <v-row align="center">
-                            <v-col cols="6" sm="9">
-                              <v-list-item-title>
-                                {{item.name}}
-                                <v-chip small class="ml-2" outlined>{{item.uuid}}</v-chip>
-                              </v-list-item-title>
-                            </v-col>
-                            <v-spacer />
-                            <v-col cols="6" sm="3">
-                              <v-alert
-                                text
-                                class="pa-2 black--text"
-                                style="text-align: center; margin: 0px"
-                                color="primary"
-                              >
-                                <small>- {{item.price}}</small>
-                              </v-alert>
-                            </v-col>
-                          </v-row>
-                        </v-list-item-content>
-                      </v-list-item>
-                      <v-list-item
-                        class="mb-2"
-                        v-for="item in paymentRequest.discounts"
-                        :key="item.uuid"
-                      >
-                        <v-list-item-content
-                          style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px"
-                        >
-                          <v-row align="center">
-                            <v-col cols="6" sm="9">
-                              <v-list-item-title>
-                                {{item.description}}
-                                <v-chip small class="ml-2" outlined>{{item.uuid}}</v-chip>
-                              </v-list-item-title>
-                            </v-col>
-                            <v-spacer />
-                            <v-col cols="6" sm="3">
-                              <v-alert
-                                text
-                                class="pa-2 black--text"
-                                style="text-align: center; margin: 0px"
-                                color="primary"
-                              >
-                                <small>+ {{item.amount}}</small>
-                              </v-alert>
-                            </v-col>
-                          </v-row>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-list>
-                    <v-card class="pl-4 pr-4 mt-4">
-                      <v-row align="center">
-                        <v-col cols="6" sm="9" justify="center">Amount Due:</v-col>
-                        <v-col align="right" cols="6" sm="3">
-                          <v-alert
-                            text
-                            class="pa-2 black--text"
-                            style="text-align: center; margin: 0px"
-                            color="primary"
+                            class="ma-2"
+                            :color="paymentRequest.player==null ? 'warning' : 'primary'"
+                            outlined
                           >
-                            <small>{{paymentRequest.currency}} {{paymentRequest.due}}</small>
-                          </v-alert>
+                            <span
+                              v-if="paymentRequest.player==null && !$vuetify.breakpoint.xsOnly"
+                            >Account not found</span>
+                            <span
+                              v-if="paymentRequest.player!=null && !$vuetify.breakpoint.xsOnly "
+                            >Account found</span>
+                            <v-icon
+                              small
+                              :class="!$vuetify.breakpoint.xsOnly ? 'ml-2' : ''"
+                              v-text="paymentRequest.player==null ? 'warning' : 'done'"
+                            ></v-icon>
+                          </v-chip>
+                        </p>
+                      </v-col>
+                    </v-row>
+                  </v-card>
+                  <v-alert
+                    text
+                    class="mb-4"
+                    color="warning"
+                    v-for="(warning,i) in paymentRequest.warnings"
+                    :key="i"
+                  >{{warning.text}}</v-alert>
+                  <v-expand-transition>
+                    <div v-show="paymentRequest.products.length>0">
+                      <v-list>
+                        <v-list-item
+                          class="mb-2"
+                          v-for="item in paymentRequest.products"
+                          :key="item.uuid"
+                        >
+                          <v-list-item-content
+                            style="margin-top: 0px; adding-top: 0px; padding-bottom: 0px"
+                          >
+                            <v-row align="center">
+                              <v-col cols="6" sm="9">
+                                <v-list-item-title>
+                                  {{item.name}}
+                                  <v-chip small class="ml-2" outlined>{{item.uuid}}</v-chip>
+                                </v-list-item-title>
+                              </v-col>
+                              <v-spacer />
+                              <v-col cols="6" sm="3">
+                                <v-alert
+                                  text
+                                  class="pa-2 black--text"
+                                  style="text-align: center; margin: 0px"
+                                  color="primary"
+                                >
+                                  <small>- {{item.price}}</small>
+                                </v-alert>
+                              </v-col>
+                            </v-row>
+                          </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item
+                          class="mb-2"
+                          v-for="item in paymentRequest.discounts"
+                          :key="item.uuid"
+                        >
+                          <v-list-item-content
+                            style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px"
+                          >
+                            <v-row align="center">
+                              <v-col cols="6" sm="9">
+                                <v-list-item-title>
+                                  {{item.description}}
+                                  <v-chip small class="ml-2" outlined>{{item.uuid}}</v-chip>
+                                </v-list-item-title>
+                              </v-col>
+                              <v-spacer />
+                              <v-col cols="6" sm="3">
+                                <v-alert
+                                  text
+                                  class="pa-2 black--text"
+                                  style="text-align: center; margin: 0px"
+                                  color="primary"
+                                >
+                                  <small>+ {{item.amount}}</small>
+                                </v-alert>
+                              </v-col>
+                            </v-row>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                      <v-card class="pl-4 pr-4 mt-4">
+                        <v-row align="center">
+                          <v-col cols="6" sm="9" justify="center">Amount Due:</v-col>
+                          <v-col align="right" cols="6" sm="3">
+                            <v-alert
+                              text
+                              class="pa-2 black--text"
+                              style="text-align: center; margin: 0px"
+                              color="primary"
+                            >
+                              <small>{{paymentRequest.currency}} {{paymentRequest.due}}</small>
+                            </v-alert>
+                          </v-col>
+                        </v-row>
+                      </v-card>
+                      <v-divider class="mt-4 mb-4" />
+                      <v-scroll-y-transition>
+                        <div v-show="stripe.error!=''">
+                          <v-alert color="warning" text>{{stripe.error}}</v-alert>
+                        </div>
+                      </v-scroll-y-transition>
+                      <v-card class="pa-2">
+                        <v-card class="pa-4" outlined>
+                          <card
+                            :stripe="stripe.key"
+                            :options="stripe.options"
+                            @change="complete = $event.complete"
+                          />
+                        </v-card>
+                        <v-btn
+                          :loading="stripe.loading || paying"
+                          :disabled="stripe.loading || paying"
+                          class="mt-4"
+                          @click="pay"
+                          block
+                          depressed
+                        >Complete Purchase</v-btn>
+                      </v-card>
+                      <v-row class="mt-4 mb-4" no-gutters align="center" justify="center">
+                        <v-col cols="4">
+                          <v-divider />
+                        </v-col>
+                        <v-col cols="4">
+                          <center>
+                            <small class="grey--text">or</small>
+                          </center>
+                        </v-col>
+                        <v-col cols="4">
+                          <v-divider />
                         </v-col>
                       </v-row>
-                    </v-card>
-                    <v-divider class="mt-4 mb-4" />
-                    <v-btn
-                      x-large
-                      block
-                      class="black--text mb-2"
-                      v-for="paybtn in paymentRequest.gateways"
-                      :key="paybtn.name"
-                      :color="paybtn.color"
-                    >
-                      <v-avatar style="transform: scale(1.5)" tile>
-                        <v-img contain :src="paybtn.logo" />
-                      </v-avatar>
-                    </v-btn>
-                  </div>
-                </v-expand-transition>
+                      <template v-for="paybtn in paymentRequest.gateways">
+                        <v-btn
+                          :key="paybtn.name"
+                          v-if="paybtn.name!='stripe'"
+                          x-large
+                          block
+                          :disabled="paying"
+                          :loading="paying"
+                          class="black--text mb-2"
+                          :color="paybtn.color"
+                          @click="payPopup(paybtn)"
+                        >
+                          <v-avatar style="transform: scale(1.5)" tile>
+                            <v-img contain :src="paybtn.logo" />
+                          </v-avatar>
+                        </v-btn>
+                      </template>
+                    </div>
+                  </v-expand-transition>
+                </div>
+                <div v-if="paymentRequest==null">
+                  <v-skeleton-loader class="mx-auto mb-3" type="article"></v-skeleton-loader>
+                  <v-skeleton-loader v-for="i in 3" :key="i" class="mx-auto mb-3" type="list-item"></v-skeleton-loader>
+                </div>
               </div>
-              <div v-if="paymentRequest==null">
-                <v-skeleton-loader class="mx-auto mb-3" type="article"></v-skeleton-loader>
-                <v-skeleton-loader v-for="i in 3" :key="i" class="mx-auto mb-3" type="list-item"></v-skeleton-loader>
-              </div>
+              <v-sheet color="grey darken-3 pt-2 pb-2 pl-5 pr-5">
+                <v-row no-gutters align="center">
+                  <v-col cols="4" justify="start">
+                    <qrcode
+                      version="3"
+                      margin="0"
+                      :color="{dark:'#000',light:'#424242'}"
+                      width="50"
+                      type="image/png"
+                      :value="requestId"
+                    />
+                  </v-col>
+                  <v-col justify="center" align="center" cols="4">
+                    <v-chip v-html="date" />
+                  </v-col>
+                  <v-col align="end" cols="4">
+                    <v-fade-transition>
+                      <v-avatar v-show="indicator" size="20px" color="primary"></v-avatar>
+                    </v-fade-transition>
+                  </v-col>
+                </v-row>
+              </v-sheet>
             </v-stepper-content>
 
             <v-stepper-content step="3">
@@ -240,10 +312,18 @@
 </template>
 
 <script>
+import { Card, handleCardPayment } from "vue-stripe-elements-plus";
+import Qrcode from "vue-qrcode";
 export default {
   props: ["uuid", "basket"],
-  components: {},
+  components: { Card, Qrcode },
   mounted() {
+    setInterval(() => {
+      this.getCurrentDate();
+    }, 1000);
+    setInterval(() => {
+      this.showIndicator();
+    }, 3000);
     this.session = this.$store.getters.core.getCoreSession();
     this.$emit("setDrawer", null);
     this.store = this.$store.getters.core
@@ -281,9 +361,27 @@ export default {
         this.paymentRequest = null;
         this.requestPayment();
       }
+    },
+    paymentRequest: function(val) {
+      this.requestId = val.uuid;
     }
   },
   data: () => ({
+    requestId: "Unknown",
+    complete: false,
+    indicator: false,
+    stripe: {
+      options: {
+        style: {
+          base: {
+            color: "white"
+          }
+        }
+      },
+      key: "pk_live_EApGv1EQo2QX4zp4E543Na5Q00JGPBZESa",
+      loading: false,
+      error: ""
+    },
     paymentStep: 1,
     itemList: [],
     store: null,
@@ -293,9 +391,86 @@ export default {
     ignInput: "",
     selectedUsername: "",
     paymentSuccess: false,
-    error: ""
+    error: "",
+    paying: false,
+    date:
+      new Date().getHours() +
+      ":" +
+      new Date().getMinutes() +
+      ":" +
+      new Date().getSeconds()
   }),
   methods: {
+    payPopup: function(gateway) {
+      this.discordLinked = true;
+      this.loginForm = true;
+
+      if ("url" in gateway) {
+        this.openWindow(
+          gateway.url,
+          "Pay using oAuth",
+          window,
+          400,
+          600,
+          false
+        );
+      }
+    },
+
+    openWindow: function(url, title, win, w, h) {
+      let mainObj = this;
+      mainObj.paying = true;
+      const y = win.top.outerHeight / 2 + win.top.screenY - h / 2;
+      const x = win.top.outerWidth / 2 + win.top.screenX - w / 2;
+      var size = " width=" + w + ", height=" + h + ", top=" + y + ", left=" + x;
+      var extraProps =
+        "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no,";
+      var newWin = win.open(url, title, extraProps + size);
+
+      var timer = setInterval(function() {
+        if (newWin.closed) {
+          clearInterval(timer);
+          mainObj.paying = false;
+        }
+      }, 200);
+    },
+    showIndicator() {
+      this.indicator = true;
+      setTimeout(() => {
+        this.indicator = false;
+      }, 200);
+    },
+    getCurrentDate() {
+      this.date =
+        new Date().getHours() +
+        ":" +
+        new Date().getMinutes() +
+        ":" +
+        new Date().getSeconds();
+    },
+    pay() {
+      let main = this;
+      main.stripe.loading = true;
+      handleCardPayment(this.getStripePaymentIntent()).then(function(result) {
+        if (result.error) {
+          main.stripe.error = result.error.message;
+        } else {
+          if (result.paymentIntent.status === "succeeded") {
+            main.stripe.error = "";
+          }
+        }
+        main.stripe.loading = false;
+      });
+    },
+    getStripePaymentIntent() {
+      var pi = "";
+      this.paymentRequest.gateways.forEach(gateway => {
+        if (gateway.name == "stripe") {
+          pi = gateway.url.charge;
+        }
+      });
+      return pi;
+    },
     requestPayment: function() {
       let main = this;
       this.categories = null;
