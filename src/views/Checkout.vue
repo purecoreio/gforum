@@ -93,6 +93,134 @@
                   <v-alert color="primary" text>{{error}}</v-alert>
                 </div>
               </v-scroll-y-transition>
+              <div v-if="paymentRequest!=null">
+                <v-card class="pa-4 mb-4">
+                  <v-row justify="center">
+                    <v-col cols="12" sm="12" align="center">
+                      <p style="margin: 0px; font-size: 20px; display: inline-block">
+                        {{paymentRequest.username}}
+                        <v-chip
+                          small
+                          class="ma-2"
+                          :color="paymentRequest.player==null ? 'warning' : 'primary'"
+                          outlined
+                        >
+                          <span
+                            v-if="paymentRequest.player==null && !$vuetify.breakpoint.xsOnly"
+                          >Account not found</span>
+                          <span
+                            v-if="paymentRequest.player!=null && !$vuetify.breakpoint.xsOnly "
+                          >Account found</span>
+                          <v-icon
+                            small
+                            :class="!$vuetify.breakpoint.xsOnly ? 'ml-2' : ''"
+                            v-text="paymentRequest.player==null ? 'warning' : 'done'"
+                          ></v-icon>
+                        </v-chip>
+                      </p>
+                    </v-col>
+                  </v-row>
+                </v-card>
+                <v-alert
+                  text
+                  class="mb-4"
+                  color="primary"
+                  v-for="(warning,i) in paymentRequest.warnings"
+                  :key="i"
+                >{{warning.text}}</v-alert>
+                <v-expand-transition>
+                  <div v-show="paymentRequest.products.length>0">
+                    <v-list>
+                      <v-list-item
+                        class="mb-2"
+                        v-for="item in paymentRequest.products"
+                        :key="item.uuid"
+                      >
+                        <v-list-item-content
+                          style="margin-top: 0px; adding-top: 0px; padding-bottom: 0px"
+                        >
+                          <v-row align="center">
+                            <v-col cols="6" sm="9">
+                              <v-list-item-title>
+                                {{item.name}}
+                                <v-chip small class="ml-2" outlined>{{item.uuid}}</v-chip>
+                              </v-list-item-title>
+                            </v-col>
+                            <v-spacer />
+                            <v-col cols="6" sm="3">
+                              <v-alert
+                                text
+                                class="pa-2 black--text"
+                                style="text-align: center; margin: 0px"
+                                color="primary"
+                              >
+                                <small>- {{item.price}}</small>
+                              </v-alert>
+                            </v-col>
+                          </v-row>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item
+                        class="mb-2"
+                        v-for="item in paymentRequest.discounts"
+                        :key="item.uuid"
+                      >
+                        <v-list-item-content
+                          style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px"
+                        >
+                          <v-row align="center">
+                            <v-col cols="6" sm="9">
+                              <v-list-item-title>
+                                {{item.description}}
+                                <v-chip small class="ml-2" outlined>{{item.uuid}}</v-chip>
+                              </v-list-item-title>
+                            </v-col>
+                            <v-spacer />
+                            <v-col cols="6" sm="3">
+                              <v-alert
+                                text
+                                class="pa-2 black--text"
+                                style="text-align: center; margin: 0px"
+                                color="primary"
+                              >
+                                <small>+ {{item.amount}}</small>
+                              </v-alert>
+                            </v-col>
+                          </v-row>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                    <v-card class="pl-4 pr-4 mt-4">
+                      <v-row align="center">
+                        <v-col cols="6" sm="9" justify="center">Amount Due:</v-col>
+                        <v-col align="right" cols="6" sm="3">
+                          <v-alert
+                            text
+                            class="pa-2 black--text"
+                            style="text-align: center; margin: 0px"
+                            color="primary"
+                          >
+                            <small>{{paymentRequest.currency}} {{paymentRequest.due}}</small>
+                          </v-alert>
+                        </v-col>
+                      </v-row>
+                    </v-card>
+                    <v-divider class="mt-4 mb-4" />
+                    <v-btn
+                      x-large
+                      block
+                      class="black--text mb-2"
+                      v-for="paybtn in paymentRequest.gateways"
+                      :key="paybtn.name"
+                      :color="paybtn.color"
+                    >
+                      <v-avatar style="transform: scale(1.5)" tile>
+                        <v-img contain :src="paybtn.logo" />
+                      </v-avatar>
+                    </v-btn>
+                  </div>
+                </v-expand-transition>
+              </div>
               <div v-if="paymentRequest==null">
                 <v-skeleton-loader class="mx-auto mb-3" type="article"></v-skeleton-loader>
                 <v-skeleton-loader v-for="i in 3" :key="i" class="mx-auto mb-3" type="list-item"></v-skeleton-loader>

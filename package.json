@@ -9,11 +9,11 @@
   },
   "dependencies": {
     "core-js": "^3.4.4",
-    "purecore": "^1.5.9",
+    "purecore": "^1.7.2",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3",
     "vue-typer": "^1.2.0",
-    "vuetify": "^2.2.6",
+    "vuetify": "^2.2.7",
     "vuex": "^3.1.2"
   },
   "devDependencies": {
