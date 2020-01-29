@@ -1,5 +1,8 @@
 <template>
   <div>
+    <v-snackbar
+      :value="indicatorErrorCount>2"
+    >We are experiencing a high volume of failed requests, taking a breath and trying again</v-snackbar>
     <v-overlay :value="paying">
       <center>
         <h2>Authenticating Payment</h2>
@@ -279,10 +282,10 @@
                 <v-row no-gutters align="center">
                   <v-col cols="4" justify="start">
                     <qrcode
-                      version="3"
-                      margin="0"
+                      :version="3"
+                      :margin="0"
                       :color="{dark:'#000',light:'#424242'}"
-                      width="50"
+                      :width="50"
                       type="image/png"
                       :value="requestId"
                     />
@@ -292,17 +295,38 @@
                   </v-col>
                   <v-col align="end" cols="4">
                     <v-fade-transition>
-                      <v-avatar v-show="indicator" size="20px" color="primary"></v-avatar>
+                      <v-avatar v-show="indicator" size="20px" :color="indicatorColor"></v-avatar>
                     </v-fade-transition>
                   </v-col>
                 </v-row>
               </v-sheet>
             </v-stepper-content>
-
-            <v-stepper-content step="3">
-              <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
-              <v-btn color="primary" @click="e6 = 4">Continue</v-btn>
-              <v-btn text>Cancel</v-btn>
+            <v-stepper-content step="3" style="padding: 0px">
+              <div style="position: relative; height: 300px">
+                <canvas
+                  id="confettiCanvas"
+                  style="position: absolute; top: 0px; left: 0px; height: 100%; width: 100%"
+                ></canvas>
+                <v-container
+                  fill-height
+                  fluid
+                  class="pa-5"
+                  style="position: absolute; top: 0px; left: 0px; height: 100%; width: 100%"
+                >
+                  <v-row align="center" justify="center">
+                    <v-col>
+                      <center>
+                        <div style="max-width: 400px">
+                          <h2>Thank you!</h2>
+                          <h4>This transaction has been authenticated</h4>
+                          <v-divider class="mt-4 mb-4" />
+                          <p>This will appear as a pending payment on your account, once we ensure that you are going to get your package, the transaction will be marked as completed</p>
+                        </div>
+                      </center>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </div>
             </v-stepper-content>
           </v-stepper>
         </v-col>
@@ -312,6 +336,7 @@
 </template>
 
 <script>
+import confetti from "canvas-confetti";
 import { Card, handleCardPayment } from "vue-stripe-elements-plus";
 import Qrcode from "vue-qrcode";
 export default {
@@ -322,7 +347,9 @@ export default {
       this.getCurrentDate();
     }, 1000);
     setInterval(() => {
-      this.showIndicator();
+      if (this.seekUpdates) {
+        this.showIndicator();
+      }
     }, 3000);
     this.session = this.$store.getters.core.getCoreSession();
     this.$emit("setDrawer", null);
@@ -364,12 +391,38 @@ export default {
     },
     paymentRequest: function(val) {
       this.requestId = val.uuid;
+    },
+    paid: function(val) {
+      if (val) {
+        this.paymentStep = 3;
+
+        var conff = confetti.create(
+          document.getElementById("confettiCanvas", {
+            useWorker: true
+          })
+        );
+        conff({
+          particleCount: 100,
+          startVelocity: 30,
+          spread: 100,
+          origin: {
+            x: Math.random(),
+            // since they fall down, start a bit higher than random
+            y: 0
+          }
+        });
+
+      }
     }
   },
   data: () => ({
+    indicatorColor: "primary",
+    indicatorErrorCount: 0,
+    indicatorErrorShown: 0,
     requestId: "Unknown",
     complete: false,
     indicator: false,
+    seekUpdates: false,
     stripe: {
       options: {
         style: {
@@ -392,6 +445,7 @@ export default {
     selectedUsername: "",
     paymentSuccess: false,
     error: "",
+    paid: false,
     paying: false,
     date:
       new Date().getHours() +
@@ -431,14 +485,52 @@ export default {
         if (newWin.closed) {
           clearInterval(timer);
           mainObj.paying = false;
+          mainObj.showIndicator();
         }
       }, 200);
     },
     showIndicator() {
-      this.indicator = true;
-      setTimeout(() => {
-        this.indicator = false;
-      }, 200);
+      let mainObj = this;
+
+      if (this.indicatorErrorCount > 2) {
+        this.seekUpdates = false;
+        setTimeout(() => {
+          this.indicatorErrorCount = 0;
+          this.seekUpdates = true;
+        }, 5000 * (this.indicatorErrorShown + 1));
+        this.indicatorErrorShown++;
+      } else {
+        this.seekUpdates = true;
+        this.indicator = true;
+        this.indicatorColor = "primary";
+
+        try {
+          this.paymentRequest
+            .isPaid()
+            .then(function(result) {
+              setTimeout(() => {
+                mainObj.indicator = false;
+              }, 200);
+              if (result) {
+                mainObj.seekUpdates = false;
+              }
+              mainObj.paid = result;
+            })
+            .catch(function() {
+              mainObj.indicatorColor = "red";
+              setTimeout(() => {
+                mainObj.indicator = false;
+              }, 200);
+              mainObj.indicatorErrorCount++;
+            });
+        } catch (error) {
+          mainObj.indicatorColor = "red";
+          mainObj.indicatorErrorCount++;
+          setTimeout(() => {
+            mainObj.indicator = false;
+          }, 200);
+        }
+      }
     },
     getCurrentDate() {
       this.date =
@@ -449,6 +541,7 @@ export default {
         new Date().getSeconds();
     },
     pay() {
+      this.showIndicator();
       let main = this;
       main.stripe.loading = true;
       handleCardPayment(this.getStripePaymentIntent()).then(function(result) {
