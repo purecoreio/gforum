@@ -1,28 +1,21 @@
 <template>
   <div>
-    <v-expand-transition>
-      <div v-show="show">
-        <v-row>
-          <v-col cols="12" sm="12" lg="4" v-for="i in 5" :key="i">
-            <v-skeleton-loader type="image" />
-          </v-col>
-        </v-row>
-      </div>
-    </v-expand-transition>
-    <v-expand-transition>
-      <div v-show="!show">
-        <Development />
-      </div>
-    </v-expand-transition>
+    <center>
+      <v-scroll-y-transition>
+        <div v-show="true" style="max-width: 600px">
+          <Perks class="mb-6" />
+        </div>
+      </v-scroll-y-transition>
+    </center>
   </div>
 </template>
 
 <script>
-import Development from "../Empty/Development";
+import Perks from "../Empty/ForumPerks";
 
 export default {
   components: {
-    Development: Development
+    Perks: Perks
   },
   mounted() {
     let main = this;

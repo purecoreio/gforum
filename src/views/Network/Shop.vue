@@ -182,7 +182,7 @@
 </template>
 
 <script>
-import Perks from "../Empty/Perks";
+import Perks from "../Empty/StorePerks";
 import Privacy from "../Empty/Privacy";
 
 export default {
