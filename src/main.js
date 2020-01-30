@@ -4,6 +4,7 @@ import router from './router'
 import vuetify from './plugins/vuetify';
 import VueTyperPlugin from 'vue-typer'
 import store from './store'
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 Vue.use(VueTyperPlugin)
