@@ -105,12 +105,12 @@
                 <div v-if="$vuetify.breakpoint.mdAndUp" class="pa-5">
                   <h1>Immortal</h1>
                   <h3>Most Popular</h3>
-                  <v-btn>Add To Basket</v-btn>
+                  <v-btn class="mt-4">Add To Basket</v-btn>
                 </div>
                 <div v-if="!$vuetify.breakpoint.mdAndUp" class="pa-5 text-center">
                   <h1>Immortal</h1>
                   <h3>Most Popular</h3>
-                  <v-btn>Add To Basket</v-btn>
+                  <v-btn class="mt-4">Add To Basket</v-btn>
                 </div>
               </v-col>
               <v-col style="height: 300px" cols="1" md="6" v-if="$vuetify.breakpoint.mdAndUp">
