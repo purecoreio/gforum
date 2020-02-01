@@ -17,7 +17,7 @@ const routes = [
     component: () => import('../views/Player.vue')
   },
   {
-    path: '/network/:uuid/:page',
+    path: '/network/:uuid/:page/:action?/:actionid?/',
     name: 'network',
     props: true,
     component: () => import('../views/Network.vue')

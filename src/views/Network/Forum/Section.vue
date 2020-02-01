@@ -59,7 +59,15 @@ export default {
       }
     },
     goToCategory: function(category) {
-      alert(category.uuid);
+      this.$router.push({
+        name: "network",
+        params: {
+          uuid: this.section.network.uuid,
+          page: "forum",
+          action: "category",
+          actionid: category.uuid,
+        }
+      });
     }
   }
 };

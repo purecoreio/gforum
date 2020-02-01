@@ -1,6 +1,6 @@
 {
   "name": "gforum",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,7 +10,7 @@
   "dependencies": {
     "canvas-confetti": "^1.0.3",
     "core-js": "^3.4.4",
-    "purecore": "^1.8.2",
+    "purecore": "^1.8.3",
     "qrcode": "^1.4.4",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
@@ -19,6 +19,7 @@
     "vue-stripe-elements-plus": "^0.3.2",
     "vue-typer": "^1.2.0",
     "vuetify": "^2.2.8",
+    "vuetify-markdown-editor": "^1.2.0",
     "vuex": "^3.1.2"
   },
   "devDependencies": {

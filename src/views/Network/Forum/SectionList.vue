@@ -1,5 +1,10 @@
 <template>
   <div>
+    <v-breadcrumbs :items="items">
+      <template v-slot:divider>
+        <v-icon>mdi-chevron-right</v-icon>
+      </template>
+    </v-breadcrumbs>
     <div v-if="sections!=null">
       <center>
         <v-scroll-y-transition>
@@ -51,7 +56,17 @@ export default {
   data: () => ({
     show: true,
     sections: null,
-    error: ""
+    error: "",
+    items: [
+      {
+        text: "Network",
+        disabled: true,
+      },
+      {
+        text: "Forum",
+        disabled: true,
+      }
+    ]
   }),
   methods: {
     getSections() {

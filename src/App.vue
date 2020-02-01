@@ -446,7 +446,10 @@ export default {
           } else if (selectedItem.type == "NETWORK") {
             this.$router.push({
               name: "network",
-              params: { uuid: val, page: "news" }
+              params: {
+                uuid: val,
+                page: "news"
+              }
             });
           }
         } else {

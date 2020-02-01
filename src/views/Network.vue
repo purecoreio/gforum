@@ -30,7 +30,12 @@
           <NetworkNews :network="network" v-if="page=='news'" />
           <NetworkVote :network="network" v-if="page=='vote'" />
           <NetworkShop :network="network" v-if="page=='shop'" />
-          <NetworkForum :network="network" v-if="page=='forum'" />
+          <NetworkForum
+            :network="network"
+            :action="action"
+            :actionid="actionid"
+            v-if="page=='forum'"
+          />
           <NetworkPlayers :network="network" v-if="page=='players'" />
           <NetworkRules :network="network" v-if="page=='rules'" />
           <NetworkDetails :network="network" v-if="page=='details'" />
@@ -50,7 +55,7 @@ import NetworkRules from "./Network/Rules";
 import NetworkDetails from "./Network/News";
 
 export default {
-  props: ["uuid", "page"],
+  props: ["uuid", "page", "action", "actionid"],
   components: {
     NetworkNews,
     NetworkVote,
