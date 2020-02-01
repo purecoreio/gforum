@@ -1,39 +1,25 @@
 <template>
-  <div id="editor">
-    <v-breadcrumbs :items="items">
-      <template v-slot:divider>
-        <v-icon>mdi-chevron-right</v-icon>
-      </template>
-    </v-breadcrumbs>
-    <Development />
+  <div>
+    <Editor v-model="text" />
   </div>
 </template>
-
 <script>
-import Development from "../../Empty/Development";
+import { Editor } from "vuetify-markdown-editor";
+
 export default {
+  name: "app",
   components: {
-    Development: Development
+    Editor
   },
-  data: () => ({
-    items: [
-      {
-        text: "Network",
-        disabled: true
-      },
-      {
-        text: "Forum",
-        disabled: false,
-        href: document.location.href.substring(
-          0,
-          document.location.href.length - 4
-        )
-      },
-      {
-        text: "Editor",
-        disabled: true
-      }
-    ]
-  })
+  data() {
+    return {
+      text: ""
+    };
+  }
 };
 </script>
+
+<style>
+@import "https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css";
+@import "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css";
+</style>

@@ -1,6 +1,6 @@
 {
   "name": "gforum",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,7 +10,7 @@
   "dependencies": {
     "canvas-confetti": "^1.0.3",
     "core-js": "^3.4.4",
-    "purecore": "^1.8.3",
+    "purecore": "^1.8.4",
     "qrcode": "^1.4.4",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
