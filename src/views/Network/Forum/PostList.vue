@@ -14,6 +14,28 @@
           <p class="mb-0">{{category.description}}</p>
         </div>
       </v-card>
+      <div v-if="posts!=null">
+        <v-card v-if="posts.length>0" outlined>
+          <v-list>
+            <v-list-item
+              @click="reviewPost(post)"
+              class="pt-3 pb-3"
+              v-for="post in posts"
+              :key="post.uuid"
+            >
+              <v-list-item-avatar>
+                <v-avatar>
+                  <v-img :src="'https://minotar.net/helm/'+post.player.username+'/100.png'" />
+                </v-avatar>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>{{post.title}}</v-list-item-title>
+                <v-list-item-subtitle>By {{post.player.username}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </div>
       <v-row v-if="loadingPosts" no-gutters>
         <v-col cols="12" v-for="i in 20" :key="i">
           <v-card outlined class="pa-1 mb-2">
@@ -87,6 +109,17 @@ export default {
       if (isIntersecting) {
         this.getPosts();
       }
+    },
+    reviewPost: function(post) {
+      this.$router.push({
+        name: "network",
+        params: {
+          uuid: this.network.uuid,
+          page: "forum",
+          action: "post",
+          actionid: post.uuid
+        }
+      });
     },
     getCategory() {
       let main = this;

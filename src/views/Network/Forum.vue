@@ -15,6 +15,7 @@
       :key="actionid"
     />
     <PostEditor v-if="action=='edit'" :network="network" />
+    <Post v-if="action=='post'" :network="network" :actionid="actionid" />
   </div>
 </template>
 
@@ -23,6 +24,7 @@ import SectionList from "./Forum/SectionList";
 import PostList from "./Forum/PostList";
 import NetworkNews from "./Forum/News";
 import PostEditor from "./Forum/PostEditor";
+import Post from "./Forum/Post";
 
 export default {
   props: ["network", "action", "actionid"],
@@ -30,7 +32,8 @@ export default {
     SectionList: SectionList,
     NetworkNews: NetworkNews,
     PostList: PostList,
-    PostEditor: PostEditor
+    PostEditor: PostEditor,
+    Post: Post
   },
   data: () => ({
     news: ["hello"],
