@@ -1,11 +1,21 @@
 <template>
   <div>
     <v-fab-transition>
-      <v-btn v-show="action!='edit'" color="primary" class="black--text" @click="createPost()" fixed dark fab bottom right>
+      <v-btn
+        v-show="action!='edit'&&action!='post'"
+        color="primary"
+        class="black--text"
+        @click="createPost()"
+        fixed
+        dark
+        fab
+        bottom
+        right
+      >
         <v-icon>edit</v-icon>
       </v-btn>
     </v-fab-transition>
-    <NetworkNews :show="action!='edit'" />
+    <NetworkNews :show="action!='edit'&&action!='post'" />
     <SectionList v-if="action==null" :network="network" />
     <PostList
       v-if="action=='category'"
