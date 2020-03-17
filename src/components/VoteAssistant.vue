@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NotificationHelper :show="showNotificationHelper" notificationType="votes" />
     <v-snackbar v-model="snackbar">
       Thank you so much for voting! Thanks to you {{sites[0].network.name}} will be more popular!
       <v-btn color="primary" text @click="snackbar = false">Close</v-btn>
@@ -26,7 +27,7 @@
             </v-stepper-step>
           </v-stepper-header>
 
-          <v-stepper-items style="height: 700px; position: relative">
+          <v-stepper-items style="height: 550px; position: relative">
             <v-stepper-content
               class="pa-0"
               style="position: absolute; width: 100%; height: 100%; top: 0px; left: 0px;"
@@ -77,12 +78,15 @@
 </template>
 
 <script>
+import NotificationHelper from "./NotificationHelper";
 export default {
   props: ["sites"],
+  components: { NotificationHelper },
   data: () => ({
     s: 1,
     voting: true,
-    snackbar: false
+    snackbar: false,
+    showNotificationHelper: false
   }),
   methods: {
     next() {
@@ -94,6 +98,7 @@ export default {
     finish() {
       this.voting = false;
       this.snackbar = true;
+      this.showNotificationHelper = true;
       setTimeout(() => {
         this.snackbar = false;
       }, 3000);

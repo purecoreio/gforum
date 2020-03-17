@@ -26,7 +26,7 @@
             </v-list-item-content>
             <v-list-item-action v-if="$vuetify.breakpoint.mdAndUp">
               <v-btn to="shop" large text>
-                check out the store
+                store
                 <v-icon class="ml-1">store</v-icon>
               </v-btn>
             </v-list-item-action>

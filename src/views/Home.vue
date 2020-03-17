@@ -20,10 +20,8 @@
         </v-col>
       </v-row>
     </v-container>
-
     <v-footer color="grey darken-2" padless>
       <v-row justify="center" no-gutters>
-        <v-btn v-for="link in links" :key="link" color="white" text rounded class="my-2">{{ link }}</v-btn>
         <v-col class="grey darken-3 py-4 text-center white--text" cols="12">
           {{ new Date().getFullYear() }} —
           <strong>quiquelhappy</strong>
@@ -46,10 +44,8 @@ export default {
     FeatureList,
     FeaturedNetworks
   },
-  data: () => ({}),
   mounted() {
     this.$emit("setDrawer", false);
-  },
-  
+  }
 };
 </script>
