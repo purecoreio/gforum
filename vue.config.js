@@ -7,6 +7,9 @@ module.exports = {
     themeColor: '#272727',
     msTileColor: '#000000',
     appleMobileWebAppCapable: 'yes',
-    appleMobileWebAppStatusBarStyle: 'black'
+    appleMobileWebAppStatusBarStyle: 'black',
+    workboxOptions: {
+      skipWaiting: true
+    }
   }
 }

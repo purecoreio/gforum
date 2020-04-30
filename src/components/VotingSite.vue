@@ -1,6 +1,11 @@
 <template>
   <div>
-    <v-card :href="site.url" target="_blank" @click="vote()" :style="'background:'+getRandomBackground()">
+    <v-card
+      :href="site.url"
+      target="_blank"
+      @click="vote()"
+      :style="'background:'+getRandomBackground()"
+    >
       <v-list-item>
         <v-list-item-content class="pt-8 pb-8">
           <v-list-item-title>{{site.votingSite.name}}</v-list-item-title>
@@ -57,25 +62,27 @@ export default {
         ",1) 100%);";
       return gradient;
     },
-    vote(){
-
-    }
+    vote() {}
   },
   mounted() {
     let main = this;
-    getFavicons("https://" + this.site.votingSite.url)
-      .then(data => {
-        try {
-          if (data.icons.length > 0) {
-            main.icon = data.icons[0].src;
+    try {
+      getFavicons("https://" + this.site.votingSite.url)
+        .then(data => {
+          try {
+            if (data.icons.length > 0) {
+              main.icon = data.icons[0].src;
+            }
+          } catch (error) {
+            main.icon = null;
           }
-        } catch (error) {
+        })
+        .catch(function() {
           main.icon = null;
-        }
-      })
-      .catch(function() {
-        main.icon = null;
-      });
+        });
+    } catch (error) {
+      main.icon = null;
+    }
   }
 };
 </script>

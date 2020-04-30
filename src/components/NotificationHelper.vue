@@ -4,7 +4,7 @@
       <v-card v-if="notificationsGranted">
         <v-card-text v-if="showAmazing" class="pt-10 pb-10">
           <center>
-            <p class="mt-4">Amazing!</p>
+            <p class="mt-4">Contacting with bongo cat...</p>
           </center>
         </v-card-text>
         <v-scroll-y-transition>
@@ -31,7 +31,7 @@
         </v-scroll-y-transition>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" depressed @click="closeAll()">Done</v-btn>
+          <v-btn v-if="!showAmazing" color="primary" depressed @click="closeAll()">Done</v-btn>
         </v-card-actions>
       </v-card>
       <v-card v-if="!notificationsGranted">
@@ -55,7 +55,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" depressed @click="notificationResult=false">Well, bye!</v-btn>
+          <v-btn color="primary" depressed @click="closeAll()">Well, bye!</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -99,9 +99,17 @@
   </div>
 </template>
 <script>
+import core from "purecore";
 import Qrcode from "vue-qrcode";
 import { isMobile } from "mobile-device-detect";
 import LoginHelper from "./LoginHelper";
+import firebase from "firebase";
+
+const messaging = firebase.messaging();
+messaging.usePublicVapidKey(
+  "BJphOjxSPRTR-M4PtBo93BkcoBj_4au323bXjy8SXOuswVEhORlRseedi90TVlsuVUsyQl7hHOX2w5UFGQNyDiA"
+);
+
 export default {
   props: ["show"],
   components: { LoginHelper, Qrcode },
@@ -114,7 +122,8 @@ export default {
     askingSession: false,
     session: null,
     showAmazing: true,
-    available: true
+    available: true,
+    token: "..."
   }),
   watch: {
     triggered(value) {
@@ -160,31 +169,42 @@ export default {
     },
     checkSession() {
       this.askNotifications = false;
+      this.askingNotifications = false;
+      this.notificationResult = false;
       this.askingSession = true;
     },
     askNotificationsPlease() {
       localStorage.setItem("askedGForumNotifications", "yes");
       this.askingNotifications = true;
       let main = this;
-      Notification.requestPermission(function(status) {
-        main.askingNotifications = false;
-        main.notificationResult = true;
-        main.notificationsGranted = true;
-        if (status === "granted") {
+      messaging
+        .requestPermission()
+        .then(() => {
+          main.askingNotifications = false;
+          main.notificationResult = true;
+
           localStorage.setItem("verifiedGForumNotifications", "yes");
           main.notificationsGranted = true;
-          setTimeout(() => {
-            if (isMobile) {
-              main.closeAll();
-            } else {
-              main.showAmazing = false;
-            }
-          }, 2000);
-        } else {
+
+          // Get Token
+          messaging.getToken().then(token => {
+            var coreinstance = new core(JSON.parse(this.session));
+            coreinstance.pushFCM(token).then(function() {
+              main.token = token;
+              if (isMobile) {
+                main.closeAll();
+              } else {
+                main.showAmazing = false;
+              }
+            });
+          });
+        })
+        .catch(function() {
           localStorage.setItem("verifiedGForumNotifications", "no");
+          main.askingNotifications = false;
+          main.notificationResult = true;
           main.notificationsGranted = false;
-        }
-      });
+        });
     }
   }
 };

@@ -13,7 +13,7 @@
       </v-expand-transition>
       <div v-if="accounts.length<=0 && session==null">
         <center>
-          <v-img src="../assets/login/whoareyou.gif" />
+          <v-img v-if="showImage!=false" src="../assets/login/whoareyou.gif" />
           <v-sheet style="padding: 10px; width: 100%; display: block" class="grey darken-4">
             <p style="margin: 0px">Who are you?</p>
           </v-sheet>
@@ -115,6 +115,7 @@ import core from "purecore";
 
 export default {
   name: "App",
+  props: ["showImage"],
   data: () => ({
     accounts: [],
     loadingAccounts: [],
@@ -296,12 +297,12 @@ export default {
       }
     },
     session(val) {
-      this.$emit("session", val);
       if (val != null && val != undefined) {
         this.$store.commit("core", new core(JSON.parse(val)));
       } else {
         this.$store.commit("core", new core());
       }
+      this.$emit("session", val);
     },
     loginForm(val) {
       this.$emit("shouldInteract", val);
