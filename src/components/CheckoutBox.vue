@@ -527,7 +527,7 @@ export default {
     },
     paid: function(val) {
       if (val) {
-        this.paymentStep = 3;
+        this.paymentStep = 4;
 
         var conff = confetti.create(
           document.getElementById("confettiCanvas", {
