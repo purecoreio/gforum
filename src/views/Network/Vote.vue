@@ -48,6 +48,30 @@
       <v-col cols="12" sm="12" lg="4" v-for="site in sites" :key="site.votingSite.uuid">
         <Site :site="site" />
       </v-col>
+      <v-col cols="12" sm="12" lg="4">
+        <v-card :style="'background:'+ getRandomBackground()" @click="allSites()">
+          <v-list-item>
+            <v-list-item-content class="pt-8 pb-8">
+              <v-list-item-title>Open all sites</v-list-item-title>
+              <v-list-item-subtitle>In seperate tabs</v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-icon v-if="icon!=null">
+              <v-img :src="icon" />
+            </v-list-item-icon>
+          </v-list-item>
+          <v-divider />
+          <v-list-item>
+            <v-list-item-content class="pt-3 pb-3">
+              <v-list-item-subtitle>Vote for {{sites[0].network.name}}</v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-btn icon>
+                <v-icon>how_to_vote</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
+        </v-card>
+      </v-col>
     </v-row>
   </div>
 </template>
@@ -68,6 +92,30 @@ export default {
     error: "",
     sites: null
   }),
+  methods: {
+    getRandomBackground() {
+      const getRandomColor = () => Math.floor(200 - Math.random() * 100);
+
+      return "linear-gradient(" +
+        Math.random() * 45 +
+        "deg, rgba(" +
+        getRandomColor() +
+        "," +
+        getRandomColor() +
+        "," +
+        getRandomColor() +
+        ",1) 50%, rgba(" +
+        getRandomColor() +
+        "," +
+        getRandomColor() +
+        "," +
+        getRandomColor() +
+        ",1) 100%);";
+    },
+    allSites() {
+      this.sites.map(site => site.votingSite.url).forEach(url => window.open(url, '_blank'))
+    }
+  },
   mounted() {
     this.$nextTick(() => {
       let main = this;
