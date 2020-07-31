@@ -8,9 +8,15 @@
         small
         fill-dot
       >
-        <v-card class="elevation-2 pa-5">
-          <div class="overline mb-4">Connected to {{connection.getInstance().name}}</div>
-          <v-list-item-subtitle>{{getSexyDate(connection.getStatus().getOpenedOn())}}</v-list-item-subtitle>
+        <v-card class="elevation-2 pa-5" v-if="connection.status.closedOn.valueOf() == 0">
+          <div class="overline mb-1">#{{connection.uuid}}</div>
+          <div class="overline mb-2">for {{getSexyDate(connection.status.openedOn)}}</div>
+          <v-list-item-title><span style="color: #77DD77">online</span> on cool1</v-list-item-title>
+        </v-card>
+        <v-card class="elevation-2 pa-5" v-if="connection.status.closedOn.valueOf() != 0">
+          <div class="overline mb-1">#{{connection.uuid}}</div>
+          <div class="overline mb-2">for {{getSexyDate((new Date().valueOf() - (connection.status.closedOn - connection.status.openedOn)))}} {{getSexyDate(connection.status.closedOn)}} {{getSexyDate(connection.status.closedOn).includes("/") ? '' : 'ago'}}</div>
+          <v-list-item-title>played on {{connection.instance.name}}</v-list-item-title>
         </v-card>
       </v-timeline-item>
       <div v-if="loading">
@@ -59,21 +65,21 @@ export default {
       var secondsElapsed = (Date.now() - date) / 1000;
       if (secondsElapsed < 3600) {
         if (Math.floor(secondsElapsed / 60) > 1) {
-          return Math.floor(secondsElapsed / 60) + " minutes ago";
+          return Math.floor(secondsElapsed / 60) + " minutes";
         } else {
-          return "1 minute ago";
+          return "1 minute";
         }
       } else if (secondsElapsed < 3600 * 24) {
         if (Math.floor(secondsElapsed / 3600) > 1) {
-          return Math.floor(secondsElapsed / 3600) + " hours  ago";
+          return Math.floor(secondsElapsed / 3600) + " hours";
         } else {
-          return "1 hour ago";
+          return "1 hour";
         }
       } else if (secondsElapsed > 3600 * 24 && secondsElapsed < 3600 * 24 * 7) {
         if (Math.floor(secondsElapsed / (3600 * 24)) > 1) {
-          return Math.floor(secondsElapsed / (3600 * 24)) + " days  ago";
+          return Math.floor(secondsElapsed / (3600 * 24)) + " days";
         } else {
-          return "1 day ago";
+          return "1 day";
         }
       } else {
         return (
